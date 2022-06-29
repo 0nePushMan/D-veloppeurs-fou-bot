@@ -7,8 +7,8 @@ import requests
 from dotenv import load_dotenv
 load_dotenv()
 
-token = os.getenv('token')
-spotify = os.getenv('spotify')
+token = os.environ['token']
+spotify = os.environ['spotify']
 
 print('ENV')
 
