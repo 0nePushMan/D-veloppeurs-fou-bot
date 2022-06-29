@@ -1,6 +1,5 @@
 import os
 import discord
-import io
 import base64
 from googlesearch import search
 import requests
@@ -38,18 +37,16 @@ class MyClient(discord.Client):
                                    'Authorization': 'Bearer ' + spotify, "Accept": "application/json", "Content-Type": "application/json"}).json()
             await message.channel.send(results['tracks']['items'][0]['external_urls']['spotify'])
 
-        if message.channel.id == 991687399224655992:
+        if message.channel.id == 991687399224655992 and message.content.startswith('/d'):
             await message.channel.send('Veuillez patienter quelques minutes')
             results = requests.post('https://bf.dallemini.ai/generate', json={"prompt": message.content}, headers={
                                     "Accept": "application/json", "Content-Type": "application/json"}).json()
-            # print(results)
-            # file = discord.File(io.BytesIO(base64.b64decode(results['images'][0])))
+
             with open('./pictures/' + message.content + '.png', 'wb') as fh:
                 x = base64.b64decode(results['images'][0])
                 fh.write(x)
 
-            await message.channel.send(file=discord.File(r'./pictures/' + message.content + '.png'))
-
+            await message.channel.send(message.author.mention, file=discord.File(r'./pictures/' + message.content + '.png'))
 
 client = MyClient()
 client.run(token)
