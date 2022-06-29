@@ -10,6 +10,8 @@ load_dotenv()
 token = os.getenv('token')
 spotify = os.getenv('spotify')
 
+print('ENV')
+
 class MyClient(discord.Client):
     async def on_ready(self):
         print('Logged on as', self.user)
