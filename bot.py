@@ -10,6 +10,8 @@ load_dotenv()
 token = os.getenv('token')
 spotify = os.getenv('spotify')
 
+print(spotify)
+
 
 class MyClient(discord.Client):
     async def on_ready(self):
@@ -19,6 +21,10 @@ class MyClient(discord.Client):
         # don't respond to ourselves
         if message.author == self.user:
             return
+
+        if message.content == '/help': 
+            commands = '<#991687399224655992> /d prompt\n <#943076081999679518> /s prompt\n <#990996145637564436> /s prompt\n <#984434964126904370> prompt'
+            await message.channel.send(commands)
 
         if (message.channel.id == 943076081999679518 or message.channel.id == 990996145637564436) and message.content.startswith('/s'):
             await message.delete()
@@ -31,15 +37,20 @@ class MyClient(discord.Client):
             await message.channel.send('UNIQUEMENT EN MAJUSCULES SVP')
 
         if message.channel.id == 984434964126904370 and not message.content.startswith('https'):
-            await message.delete()
-            query = 'https://api.spotify.com/v1/search?q=' + message.content + '&type=track'
-            results = requests.get(query, headers={
-                                   'Authorization': 'Bearer ' + spotify, "Accept": "application/json", "Content-Type": "application/json"}).json()
-            await message.channel.send(results['tracks']['items'][0]['external_urls']['spotify'])
+            try:
+                await message.delete()
+                query = 'https://api.spotify.com/v1/search?q=' + message.content + '&type=track'
+                results = requests.get(query, headers={
+                    'Authorization': 'Bearer ' + spotify, "Accept": "application/json", "Content-Type": "application/json"}).json()
+                print(results)
+                await message.channel.send(results['tracks']['items'][0]['external_urls']['spotify'] + ' '+message.author.mention)
+            except BaseException as err:
+                print(err)
+                raise
 
         if message.channel.id == 991687399224655992 and message.content.startswith('/d'):
             await message.channel.send('Veuillez patienter quelques minutes')
-            results = requests.post('https://bf.dallemini.ai/generate', json={"prompt": message.content}, headers={
+            results = requests.post('https://bf.dallemini.ai/generate', json={"prompt": message.content.replace('/d', '')}, headers={
                                     "Accept": "application/json", "Content-Type": "application/json"}).json()
 
             with open('./pictures/' + message.content + '.png', 'wb') as fh:
@@ -47,6 +58,9 @@ class MyClient(discord.Client):
                 fh.write(x)
 
             await message.channel.send(message.author.mention, file=discord.File(r'./pictures/' + message.content + '.png'))
+        elif message.channel.id == 991687399224655992 and not message.content.startswith('/d'):
+            await message.delete()
+
 
 client = MyClient()
 client.run(token)
