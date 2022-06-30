@@ -10,7 +10,7 @@ load_dotenv()
 token = os.environ['token']
 spotify = os.environ['spotify']
 
-print('ENV')
+print('BOT STARTED')
 
 class MyClient(discord.Client):
     async def on_ready(self):
