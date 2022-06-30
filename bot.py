@@ -3,7 +3,6 @@ import threading
 import discord
 import base64
 from googlesearch import search
-from matplotlib.pyplot import get
 import requests
 
 from dotenv import load_dotenv
