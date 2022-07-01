@@ -48,7 +48,7 @@ class MyClient(discord.Client):
             if message.content.startswith('/g'):
                 await message.delete()
                 results = []
-                for j in search(message.content.replace('/g', ''), stop=10, pause=2):
+                for j in search(message.content.replace('/g', ''), num=10, stop=10, pause=2):
                     results.append(j)
                 await message.channel.send(results[0])
 
