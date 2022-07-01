@@ -12,6 +12,7 @@ token = os.environ['token']
 client_id = os.environ['client_id']
 client_secret = os.environ['client_secret']
 
+
 class MyClient(discord.Client):
     spotify = ''
 
@@ -21,7 +22,7 @@ class MyClient(discord.Client):
         result = requests.post('https://accounts.spotify.com/api/token', headers={
             'Authorization': 'Basic ' + d}, data={'grant_type': 'client_credentials'}, json=True).json()
         MyClient.spotify = result['access_token']
-        
+
     def set_interval(func, sec):
         def func_wrapper():
             MyClient.set_interval(func, sec)
@@ -47,7 +48,7 @@ class MyClient(discord.Client):
             if message.content.startswith('/g'):
                 await message.delete()
                 results = []
-                for j in search(message.content.replace('/g', ''), num=10, stop=10, pause=2):
+                for j in search(message.content.replace('/g', ''), stop=10, pause=2):
                     results.append(j)
                 await message.channel.send(results[0])
 
