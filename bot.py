@@ -4,6 +4,8 @@ import discord
 import base64
 from googlesearch import search
 import requests
+import time
+import numpy as np
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -54,6 +56,18 @@ class MyClient(discord.Client):
 
         if message.channel.id == 983752718915108934 and not message.content.isupper():
             await message.channel.send('UNIQUEMENT EN MAJUSCULES SVP')
+
+        if message.channel.id == 994154345778126858:
+            def req_word(word):
+                r = requests.post(
+                    "https://cemantix.herokuapp.com/score", data={"word": message.content}).json()
+                if "error" in r and "tapez trop vite" in r["error"]:
+                    time.sleep(.2)
+                    return req_word(word)
+                return r['score']
+            score = req_word(message.content)
+            message.channel.send(score)
+                
 
         if message.channel.id == 984434964126904370 and not message.content.startswith('https'):
             try:
