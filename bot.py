@@ -118,6 +118,7 @@ class MyClient(discord.Client):
             score = await req_word(first)
 
             if score == True:
+                print('FOUNDERS', MyClient.founders)
                 MyClient.found == first
                 await message.delete()
                 if len(MyClient.founders) > 0:
