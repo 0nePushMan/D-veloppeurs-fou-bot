@@ -20,8 +20,7 @@ class MyClient(discord.Client):
     hot = []
     found = ''
     founders = []
-    print('FOUNDERS', founders)
-    
+
     def getToken():
         d = base64.urlsafe_b64encode(
             (client_id + ':' + client_secret).encode("utf-8")).decode()
@@ -119,6 +118,7 @@ class MyClient(discord.Client):
             score = await req_word(first)
 
             if score == True:
+                MyClient.found == first
                 await message.delete()
                 if len(MyClient.founders) > 0:
                     for user in MyClient.founders:
