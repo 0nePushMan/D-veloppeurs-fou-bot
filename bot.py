@@ -20,7 +20,8 @@ class MyClient(discord.Client):
     hot = []
     found = ''
     founders = []
-    print('FOUND', found)
+    print('FOUNDERS', founders)
+    
     def getToken():
         d = base64.urlsafe_b64encode(
             (client_id + ':' + client_secret).encode("utf-8")).decode()
