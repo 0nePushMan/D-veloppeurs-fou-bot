@@ -5,7 +5,7 @@ import discord
 
 class Dalle(Service):
     async def handle_message(self, bot_user, message):
-        if message.author == bot_user:
+        if message.author == bot_user or not message.content.startswith('/'):
             return
         await message.channel.send('Veuillez patienter quelques minutes')
         results = requests.post('https://bf.dallemini.ai/generate', json={"prompt": message.content.replace('/d', '')}, headers={

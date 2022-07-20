@@ -5,18 +5,23 @@ import base64
 from googlesearch import search
 import requests
 import time
-from datetime import date
 from dotenv import load_dotenv
 from services.pendu import Pendu
 from services.majuscule import Majuscule
 from services.cemantix import Cemantix
+from services.dalle import Dalle
+from enum import Enum
 load_dotenv()
 
 token = os.environ['token']
 client_id = os.environ['client_id']
 client_secret = os.environ['client_secret']
 
-
+class Channels(Enum):
+    Pendu = 999303816505737216
+    Cemantix = 994154345778126858
+    Majuscule = 983752718915108934 # Mur des lamentations
+    Dalle = 991687399224655992
 
 class MyClient(discord.Client):
     spotify = ''
@@ -24,6 +29,7 @@ class MyClient(discord.Client):
     pendu = Pendu()
     maj = Majuscule()
     cemantix = Cemantix()
+    dalle = Dalle()
 
     def getToken():
         d = base64.urlsafe_b64encode(
@@ -49,9 +55,14 @@ class MyClient(discord.Client):
             return
         print("Channel : ", message.channel.id)
 
-        if message.channel.id == 999303816505737216:
+        if message.channel.id == Channels.Pendu:
             await self.pendu.handle_message(self.user, message)
-
+        elif message.channel.id == Channels.Majuscule:
+            await self.maj.handle_message(self.user, message)
+        elif message.channel.id == Channels.Cemantix:
+            await self.cemantix.handle_message(self.user, message)
+        elif message.channel.id == Channels.Dalle:
+            self.dalle.handle_message(self.user, message)
 
         if message.content == '/help':
             commands = '<#991687399224655992> /d prompt\n <#943076081999679518> /s prompt\n <#990996145637564436> /s prompt\n <#984434964126904370> prompt'
@@ -66,12 +77,6 @@ class MyClient(discord.Client):
                     results.append(j)
                 await message.channel.send(results[0])
 
-        if message.channel.id == 983752718915108934 and not message.content.isupper():
-            await self.maj.handle_message(self.user, message)
-
-        if message.channel.id == 994154345778126858 or message.channel.id == 994184781573140493:
-            await self.cemantix.handle_message(self.user, message)
-
         if message.channel.id == 984434964126904370 and not message.content.startswith('https'):
             try:
                 if len(MyClient.spotify) == 0:
@@ -85,14 +90,7 @@ class MyClient(discord.Client):
                 print(err)
                 raise
 
-        if message.channel.id == 991687399224655992 and message.content.startswith('/'):
-            await message.channel.send('Veuillez patienter quelques minutes')
-            results = requests.post('https://bf.dallemini.ai/generate', json={"prompt": message.content.replace('/d', '')}, headers={
-                                    "Accept": "application/json", "Content-Type": "application/json"}).json()
-            with open('./pictures/' + message.content + '.png', 'wb') as fh:
-                x = base64.b64decode(results['images'][0])
-                fh.write(x)
-            await message.channel.send(message.author.mention, file=discord.File(r'./pictures/' + message.content + '.png'))
+        
         elif message.channel.id == 991687399224655992 and not message.content.startswith('/'):
             await message.delete()
 
