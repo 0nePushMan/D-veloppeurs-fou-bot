@@ -55,14 +55,19 @@ class MyClient(discord.Client):
             return
         print("Channel : ", message.channel.id)
 
-        if message.channel.id == Channels.Pendu:
+        print(Channels)
+        if message.channel.id == Channels.Pendu.value:
+            print("Pendu")
             await self.pendu.handle_message(self.user, message)
-        elif message.channel.id == Channels.Majuscule:
+        elif message.channel.id == Channels.Majuscule.value:
+            print("Majuscule")
             await self.maj.handle_message(self.user, message)
-        elif message.channel.id == Channels.Cemantix:
+        elif message.channel.id == Channels.Cemantix.value:
+            print("Cemantix")
             await self.cemantix.handle_message(self.user, message)
-        elif message.channel.id == Channels.Dalle:
-            self.dalle.handle_message(self.user, message)
+        elif message.channel.id == Channels.Dalle.value:
+            print("Dalle")
+            await self.dalle.handle_message(self.user, message)
 
         if message.content == '/help':
             commands = '<#991687399224655992> /d prompt\n <#943076081999679518> /s prompt\n <#990996145637564436> /s prompt\n <#984434964126904370> prompt'

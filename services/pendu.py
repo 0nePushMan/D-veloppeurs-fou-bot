@@ -2,7 +2,7 @@ import random
 import re
 from services.service import Service
 
-words = open('../liste_francais.txt', 'r').read().split('\n')
+words = open('liste_francais.txt', 'r').read().split('\n')
 EMOJIS = ['👶','🧒','👨‍🦱','👨🏼‍🏫','🧔','👨‍💼','👬','👪','👴','😷','🏥','💀']
 
 class Pendu(Service):
